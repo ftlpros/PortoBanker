@@ -6,6 +6,9 @@ package com.porto.ui.telecom;
 
 import com.porto.main.PortoMain;
 import com.porto.ui.*;
+import com.porto.ui.telecom.callbacks.ResetListener;
+import java.util.ArrayList;
+import java.util.Vector;
 
 /**
  *
@@ -16,10 +19,15 @@ public class TelecomKYC extends javax.swing.JPanel {
     /**
      * Creates new form Login
      */
+    Vector<ResetListener> rl = new Vector<>();
     public TelecomKYC() {
         initComponents();
+       
+        addKycResetListener(kYCFieldsContainer1);
     }
-
+    public void addKycResetListener(ResetListener listener){
+        rl.add(listener);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -33,10 +41,12 @@ public class TelecomKYC extends javax.swing.JPanel {
         titlePanel1 = new com.porto.components.TitlePanel();
         jLabel1 = new javax.swing.JLabel();
         innerGradientPanel1 = new com.porto.components.InnerGradientPanel();
-        kYCFieldsContainer1 = new com.porto.ui.telecom.KYCFieldsContainer();
         innerGradientPanel3 = new com.porto.components.InnerGradientPanel();
         mButton1 = new com.porto.components.MButton();
         mButton2 = new com.porto.components.MButton();
+        mButton3 = new com.porto.components.MButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        kYCFieldsContainer1 = new com.porto.ui.telecom.KYCFieldsContainer();
         innerGradientPanel2 = new com.porto.components.InnerGradientPanel();
 
         setLayout(new java.awt.BorderLayout());
@@ -54,8 +64,8 @@ public class TelecomKYC extends javax.swing.JPanel {
         add(titlePanel1, java.awt.BorderLayout.PAGE_START);
 
         innerGradientPanel1.setLayout(new java.awt.BorderLayout());
-        innerGradientPanel1.add(kYCFieldsContainer1, java.awt.BorderLayout.CENTER);
 
+        innerGradientPanel3.setPreferredSize(new java.awt.Dimension(475, 100));
         innerGradientPanel3.setLayout(new java.awt.GridBagLayout());
 
         mButton1.setText("BACK");
@@ -67,13 +77,13 @@ public class TelecomKYC extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.ipadx = 49;
-        gridBagConstraints.ipady = 20;
+        gridBagConstraints.ipadx = 46;
+        gridBagConstraints.ipady = 25;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(12, 65, 12, 0);
+        gridBagConstraints.insets = new java.awt.Insets(12, 43, 26, 0);
         innerGradientPanel3.add(mButton1, gridBagConstraints);
 
-        mButton2.setText("NEXT");
+        mButton2.setText("RESET");
         mButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonActionHandler(evt);
@@ -82,13 +92,27 @@ public class TelecomKYC extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.ipadx = 45;
-        gridBagConstraints.ipady = 20;
+        gridBagConstraints.ipadx = 34;
+        gridBagConstraints.ipady = 25;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(12, 18, 12, 61);
+        gridBagConstraints.insets = new java.awt.Insets(12, 14, 26, 0);
         innerGradientPanel3.add(mButton2, gridBagConstraints);
 
+        mButton3.setText("NEXT");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipadx = 48;
+        gridBagConstraints.ipady = 25;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(12, 10, 26, 46);
+        innerGradientPanel3.add(mButton3, gridBagConstraints);
+
         innerGradientPanel1.add(innerGradientPanel3, java.awt.BorderLayout.PAGE_END);
+
+        jScrollPane1.setViewportView(kYCFieldsContainer1);
+
+        innerGradientPanel1.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
         add(innerGradientPanel1, java.awt.BorderLayout.CENTER);
 
@@ -98,7 +122,7 @@ public class TelecomKYC extends javax.swing.JPanel {
         innerGradientPanel2.setLayout(innerGradientPanel2Layout);
         innerGradientPanel2Layout.setHorizontalGroup(
             innerGradientPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 442, Short.MAX_VALUE)
+            .addGap(0, 559, Short.MAX_VALUE)
         );
         innerGradientPanel2Layout.setVerticalGroup(
             innerGradientPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -117,6 +141,10 @@ public class TelecomKYC extends javax.swing.JPanel {
         if(command.equals("NEXT")){
             //PortoMain.getInstance().setContentPanel(new KYCSelector());
         }
+        if(command.equals("RESET")){
+            rl.get(0).reset();
+        }
+        
     }//GEN-LAST:event_buttonActionHandler
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -124,9 +152,11 @@ public class TelecomKYC extends javax.swing.JPanel {
     private com.porto.components.InnerGradientPanel innerGradientPanel2;
     private com.porto.components.InnerGradientPanel innerGradientPanel3;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private com.porto.ui.telecom.KYCFieldsContainer kYCFieldsContainer1;
     private com.porto.components.MButton mButton1;
     private com.porto.components.MButton mButton2;
+    private com.porto.components.MButton mButton3;
     private com.porto.components.TitlePanel titlePanel1;
     // End of variables declaration//GEN-END:variables
 }
