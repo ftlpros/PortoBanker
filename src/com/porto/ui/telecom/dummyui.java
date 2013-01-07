@@ -14,20 +14,15 @@ import java.util.Vector;
  *
  * @author eipps
  */
-public class TelecomKYC extends javax.swing.JPanel {
+public class dummyui extends javax.swing.JPanel {
 
     /**
      * Creates new form Login
      */
-    Vector<ResetListener> rl = new Vector<>();
-    public TelecomKYC() {
+    public dummyui() {
         initComponents();
-       
-        addKycResetListener(kYCFieldsContainer1);
     }
-    public void addKycResetListener(ResetListener listener){
-        rl.add(listener);
-    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -45,8 +40,6 @@ public class TelecomKYC extends javax.swing.JPanel {
         mButton1 = new com.porto.components.MButton();
         mButton2 = new com.porto.components.MButton();
         mButton3 = new com.porto.components.MButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        kYCFieldsContainer1 = new com.porto.ui.telecom.KYCFieldsContainer();
         innerGradientPanel2 = new com.porto.components.InnerGradientPanel();
 
         setLayout(new java.awt.BorderLayout());
@@ -110,10 +103,6 @@ public class TelecomKYC extends javax.swing.JPanel {
 
         innerGradientPanel1.add(innerGradientPanel3, java.awt.BorderLayout.PAGE_END);
 
-        jScrollPane1.setViewportView(kYCFieldsContainer1);
-
-        innerGradientPanel1.add(jScrollPane1, java.awt.BorderLayout.CENTER);
-
         add(innerGradientPanel1, java.awt.BorderLayout.CENTER);
 
         innerGradientPanel2.setPreferredSize(new java.awt.Dimension(400, 50));
@@ -142,7 +131,7 @@ public class TelecomKYC extends javax.swing.JPanel {
             //PortoMain.getInstance().setContentPanel(new KYCSelector());
         }
         if(command.equals("RESET")){
-            rl.get(0).reset();
+            
         }
         
     }//GEN-LAST:event_buttonActionHandler
@@ -152,8 +141,6 @@ public class TelecomKYC extends javax.swing.JPanel {
     private com.porto.components.InnerGradientPanel innerGradientPanel2;
     private com.porto.components.InnerGradientPanel innerGradientPanel3;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private com.porto.ui.telecom.KYCFieldsContainer kYCFieldsContainer1;
     private com.porto.components.MButton mButton1;
     private com.porto.components.MButton mButton2;
     private com.porto.components.MButton mButton3;

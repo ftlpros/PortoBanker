@@ -28,6 +28,7 @@ public class BarcodeReader implements Runnable, SerialPortEventListener {
     private InputStream inputStream;
     private SerialPort serialPort;
     private CommPortIdentifier portId;
+    private Thread reader;
     private Vector<BarcodeCallback> barcodeCallback = new Vector();
     public BarcodeReader(CommPortIdentifier portId) {
         try {
@@ -41,7 +42,7 @@ public class BarcodeReader implements Runnable, SerialPortEventListener {
                     SerialPort.PARITY_NONE);
            // serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
 
-            Thread reader = new Thread(this);
+            reader = new Thread(this);
             reader.start();
         } catch (UnsupportedCommOperationException ex) {
             System.out.println("Opps.. UnsupportedCommOperationException");
@@ -95,6 +96,10 @@ public class BarcodeReader implements Runnable, SerialPortEventListener {
                         int numBytes = inputStream.read(readBuffer);
                         barcodeCallback.get(0).getBarcodeData(new String(readBuffer));
                         System.out.print("Data:"+new String(readBuffer));
+//                        inputStream.close();
+//                        serialPort.removeEventListener();
+//                        serialPort.close();
+//                        reader.interrupt();
                     }
                     //System.out.print("Data:"+new String(readBuffer));
                 } catch (IOException e) {

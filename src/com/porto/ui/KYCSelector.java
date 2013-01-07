@@ -5,7 +5,8 @@
 package com.porto.ui;
 
 import com.porto.main.PortoMain;
-import com.porto.ui.telecom.TelecomKYC;
+import com.porto.ui.telecom.CustomerInformationUI;
+
 
 /**
  *
@@ -96,7 +97,7 @@ public class KYCSelector extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonActionHandler(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonActionHandler
-        PortoMain.getInstance().setContentPanel(new TelecomKYC());
+        PortoMain.getInstance().setContentPanel(new CustomerInformationUI());
     }//GEN-LAST:event_buttonActionHandler
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

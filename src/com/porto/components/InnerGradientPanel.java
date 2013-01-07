@@ -13,9 +13,12 @@ public class InnerGradientPanel extends JPanel {
 		int width = getWidth();
 		int height = getHeight();
 		
-		Color gradientStart = new Color(10,90,170);//220, 255, 149);9,100,170
-		Color gradientEnd = new Color(10,90,170);//183, 234, 98);6,103,158
+//		Color gradientStart = new Color(10,90,170);//220, 255, 149);9,100,170
+//		Color gradientEnd = new Color(10,90,170);//183, 234, 98);6,103,158
 		
+                Color gradientStart = new Color(255,255,255);
+                Color gradientEnd = new Color(255,255,255);
+                
 		Graphics2D g2 = (Graphics2D) g;
 		GradientPaint painter = new GradientPaint(0, 0, gradientStart,
 				0, height, gradientEnd);

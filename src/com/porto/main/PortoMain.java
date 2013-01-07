@@ -5,6 +5,7 @@
 package com.porto.main;
 
 import com.porto.components.ConnectingAnimationPanel;
+import com.porto.components.DialogPanel;
 import com.porto.tools.UIHelper;
 import com.porto.ui.Login;
 import java.awt.BorderLayout;
@@ -32,8 +33,8 @@ public class PortoMain extends JFrame {
     private String devideId;
     private JComponent contentPane;
     public static PortoMain INSTANCE;
-    private ConnectingAnimationPanel glasspane;
-
+    private ConnectingAnimationPanel animationGlasspane;
+    private DialogPanel dialogGlasspane;
     public PortoMain() throws HeadlessException {
         setUndecorated(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -47,10 +48,12 @@ public class PortoMain extends JFrame {
     }
 
     public void initUI() {
-        glasspane = new ConnectingAnimationPanel("Sending the request to the remote system...",
+        animationGlasspane = new ConnectingAnimationPanel("Sending the request to the remote system...",
                 UIHelper.readImageIcon("network.png"));
+        dialogGlasspane = new DialogPanel();
+        //dialogGlasspane.setSize(400,400);
         contentPane = new Login();
-        setGlassPane(glasspane);
+        setGlassPane(animationGlasspane);
         setContentPane(contentPane);
     }
 
@@ -65,16 +68,34 @@ public class PortoMain extends JFrame {
     }
 
     public void startAnimatedGlassPane(String message) {
-        glasspane.setMessage(message);
-        glasspane.setVisible(true);
-        glasspane.start();
+        animationGlasspane.setMessage(message);
+        animationGlasspane.setVisible(true);
+        animationGlasspane.start();
 
     }
-
     public void stopAnimatedGlassPane() {
-        glasspane.stop();
-        glasspane.setVisible(false);
+        animationGlasspane.stop();
+        animationGlasspane.setVisible(false);
     }
+    public void startDialogGlassPane(){
+        System.out.println("dialog glasspane-1");
+        dialogGlasspane.setVisible(true);
+    }
+    public void stopDialogGlassPane(){
+        dialogGlasspane.setVisible(false);
+    }
+    public void changeGlassPane(String glasspane){
+        System.out.println("dialog glasspane-2");
+        if(glasspane.equals("DIALOG")){
+            System.out.println("dialog glasspane");
+            setGlassPane(dialogGlasspane);
+        }
+        else{
+            setGlassPane(animationGlasspane);
+        }
+    }
+
+   
 
     public static PortoMain getInstance() {
         if (INSTANCE != null) {
@@ -88,12 +109,20 @@ public class PortoMain extends JFrame {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 try {
+                    
                     UIManager.setLookAndFeel(new SubstanceCremeLookAndFeel());
-                    UIManager.put("TaskPane.background", new ColorUIResource(Color.BLACK));
-                    //TaskPane.specialTitleForeground
-                    UIManager.put("TaskPane.specialTitleForeground", new ColorUIResource(Color.WHITE));
+//                    Color gradientEnd = UIManager.getColor("TaskPane.titleBackgroundGradientEnd");
+//                    System.out.println(gradientEnd);
+                    UIManager.put("TaskPane.titleBackgroundGradientStart",new ColorUIResource(199, 212, 247));
+                    UIManager.put("TaskPane.titleBackgroundGradientEnd",new ColorUIResource(199, 212, 247));
+//                    UIManager.put("TaskPane.specialTitleBackground", new ColorUIResource(Color.BLUE));
+//                    UIManager.put("TaskPane.titleForeground", new ColorUIResource(Color.GREEN));
+//                    UIManager.put("TaskPane.specialTitleForeground", new ColorUIResource(Color.ORANGE));
+//                    UIManager.put("TaskPane.borderColor", new ColorUIResource(Color.YELLOW));
+//                    UIManager.put("TaskPane.titleOver", new ColorUIResource(Color.RED));
                     //TaskPane.font
-                    UIManager.put("TaskPane.font", new java.awt.Font("Times New Roman", 1, 20));
+                    //TaskPaneContainer.foreground
+                    UIManager.put("TaskPane.font", new java.awt.Font("Times New Roman",1, 25));
                     JFrame.setDefaultLookAndFeelDecorated(false);
                     PortoMain mainFrame = PortoMain.getInstance();
                     //mainFrame.loadDevicesPropeties();
