@@ -3,31 +3,43 @@
  * and open the template in the editor.
  */
 package com.porto.ui.telecom;
+
 import aadharDataSchemaObjs.PrintLetterBarcodeDataType;
 import com.porto.components.InnerGradientPanel;
 import com.porto.dao.AadharBarcodeInfoDAO;
 import com.porto.io.BarcodeCallback;
+import com.porto.io.BarcodeReader;
+import com.porto.io.PortChecker;
+import com.porto.main.PortoMain;
 import com.porto.ui.telecom.callbacks.ResetListener;
 import com.toedter.calendar.JDateChooser;
+import gnu.io.CommPortIdentifier;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.io.StringReader;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
+
 /**
  *
  * @author eipps
  */
-public class AadharBarcodeFieldsPanel extends InnerGradientPanel implements AncestorListener{
+public class AadharBarcodeFieldsPanel extends InnerGradientPanel implements AncestorListener, BarcodeCallback, ComponentListener{
 
     /**
      * Creates new form AadharBarcodeFieldsPanel
      */
     public AadharBarcodeFieldsPanel() {
         initComponents();
+        addAncestorListener(this);
+        addComponentListener(this);
+       
     }
-    public void displayBarcodeData(){
+
+    public void displayBarcodeData() {
         if (AadharBarcodeInfoDAO.getInstance().isDataAvailable()) {
             uidtf.setText(AadharBarcodeInfoDAO.getInstance().getUid());
             nametf.setText(AadharBarcodeInfoDAO.getInstance().getName());
@@ -41,6 +53,7 @@ public class AadharBarcodeFieldsPanel extends InnerGradientPanel implements Ance
             pincodetf.setText(AadharBarcodeInfoDAO.getInstance().getPincode());
         }
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -230,12 +243,6 @@ public class AadharBarcodeFieldsPanel extends InnerGradientPanel implements Ance
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(10, 18, 0, 0);
         add(gendertf, gridBagConstraints);
-
-        uidtf.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                uidtfActionPerformed(evt);
-            }
-        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -288,6 +295,11 @@ public class AadharBarcodeFieldsPanel extends InnerGradientPanel implements Ance
         add(yobtf, gridBagConstraints);
 
         jButton1.setText("Start Scan");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonActionHandler(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
@@ -309,10 +321,17 @@ public class AadharBarcodeFieldsPanel extends InnerGradientPanel implements Ance
         add(jScrollPane2, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void uidtfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uidtfActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_uidtfActionPerformed
-
+    private void buttonActionHandler(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonActionHandler
+        CommPortIdentifier commPortIdentifier = PortChecker.checker();
+        if (commPortIdentifier != null) {
+            BarcodeReader reader = new BarcodeReader(commPortIdentifier);
+            reader.addBarcodeListener(this);
+            PortoMain.getInstance().changeGlassPane("DIALOG");
+            PortoMain.getInstance().startDialogGlassPane();
+        } else {
+            //port error message
+        }
+    }//GEN-LAST:event_buttonActionHandler
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea addresstf;
     private javax.swing.JTextField disttf;
@@ -337,17 +356,18 @@ public class AadharBarcodeFieldsPanel extends InnerGradientPanel implements Ance
     private javax.swing.JTextField vtctf;
     private javax.swing.JTextField yobtf;
     // End of variables declaration//GEN-END:variables
-   public void reset() {
-       addresstf.setText("");
-       disttf.setText("");
-       gendertf.setText("");
-       lmtf.setText("");
-       nametf.setText("");
-       pincodetf.setText("");
-       statetf.setText("");
-       uidtf.setText("");
-       vtctf.setText("");
-       yobtf.setText("");
+
+    public void reset() {
+        addresstf.setText("");
+        disttf.setText("");
+        gendertf.setText("");
+        lmtf.setText("");
+        nametf.setText("");
+        pincodetf.setText("");
+        statetf.setText("");
+        uidtf.setText("");
+        vtctf.setText("");
+        yobtf.setText("");
     }
 
     @Override
@@ -361,5 +381,55 @@ public class AadharBarcodeFieldsPanel extends InnerGradientPanel implements Ance
     @Override
     public void ancestorMoved(AncestorEvent event) {
         displayBarcodeData();
+    }
+
+    @Override
+    public void getBarcodeData(String is) {
+        try {
+            JAXBContext jc = JAXBContext.newInstance(aadharDataSchemaObjs.ObjectFactory.class);
+            Unmarshaller unmarshaller = jc.createUnmarshaller();
+            StringReader reader1 = new StringReader(is);
+            JAXBElement printLetterBarcodeData = (JAXBElement) unmarshaller.unmarshal(reader1);
+            PrintLetterBarcodeDataType barcodeDataType = (PrintLetterBarcodeDataType) printLetterBarcodeData.getValue();
+            AadharBarcodeInfoDAO.getInstance().setUid(String.valueOf(barcodeDataType.getUid()));
+            AadharBarcodeInfoDAO.getInstance().setName(barcodeDataType.getName());
+            if (barcodeDataType.getGender().equals("F")) {
+                AadharBarcodeInfoDAO.getInstance().setGender("FEMALE");
+            } else {
+                AadharBarcodeInfoDAO.getInstance().setGender("MALE");
+            }
+            AadharBarcodeInfoDAO.getInstance().setYob(String.valueOf(barcodeDataType.getYob()));
+            AadharBarcodeInfoDAO.getInstance().setLm(barcodeDataType.getLm());
+            AadharBarcodeInfoDAO.getInstance().setAddress(barcodeDataType.getLoc());
+            AadharBarcodeInfoDAO.getInstance().setVtc(barcodeDataType.getVtc());
+            AadharBarcodeInfoDAO.getInstance().setDist(barcodeDataType.getDist());
+            AadharBarcodeInfoDAO.getInstance().setState(barcodeDataType.getState());
+            AadharBarcodeInfoDAO.getInstance().setPincode(String.valueOf(barcodeDataType.getPc()));
+            AadharBarcodeInfoDAO.getInstance().setDataAvailable(true);
+            PortoMain.getInstance().stopDialogGlassPane();
+            //barcodeReader.clsePort();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void componentResized(ComponentEvent e) {
+        System.out.println("componentResized");
+    }
+
+    @Override
+    public void componentMoved(ComponentEvent e) {
+        System.out.println("componentMoved");
+    }
+
+    @Override
+    public void componentShown(ComponentEvent e) {
+        System.out.println("componentShown");
+    }
+
+    @Override
+    public void componentHidden(ComponentEvent e) {
+        System.out.println("componentHidden");
     }
 }
