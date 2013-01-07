@@ -111,8 +111,10 @@ public class TitlePanel extends  InnerGradientPanel{
 		path.transform(translation);
 		thickCurve.subtract(new Area(path));
 
-		Color start = new Color(255, 50, 0, 200);//255, 50, 0..9, 91, 116
-		Color end = new Color(255, 50, 0, 0);
+//		Color start = new Color(255, 50, 0, 200);//255, 50, 0..9, 91, 116
+//		Color end = new Color(255, 50, 0, 0);
+                Color start = new Color(0, 0, 190, 200);//255, 50, 0..9, 91, 116
+		Color end = new Color(0, 0, 190, 0);
 
 		Rectangle bounds = thickCurve.getBounds();
 		GradientPaint painter = new GradientPaint(0, curve.getBounds().y,
